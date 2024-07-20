@@ -1,0 +1,5 @@
+export enum EExaminationType {
+  EXAMINATION = 'EXAMINATION',
+  CHALLENGE = 'CHALLENGE',
+  EXERCISE = 'EXERCISE',
+}

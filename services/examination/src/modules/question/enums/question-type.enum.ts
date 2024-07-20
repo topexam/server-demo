@@ -1,0 +1,6 @@
+export enum EQuestionType {
+  MULTI_CHOICES = 'MULTI_CHOICES',
+  CHECK_LIST = 'CHECK_LIST',
+  FILL_BLANK = 'FILL_BLANK',
+  DROPDOWN = 'DROPDOWN',
+}

@@ -1,0 +1,6 @@
+.env
+Dockerfile
+Dockerfile.dev
+
+node_modules/
+dist/
