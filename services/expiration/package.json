@@ -1,7 +1,7 @@
 {
   "name": "@api/expiration",
   "version": "0.0.0",
-  "description": "This is expiration service",
+  "description": "Expiration Service",
   "author": {
     "name": "Felix Nguyen",
     "email": "im.felixng@gmail.com"

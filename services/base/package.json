@@ -1,7 +1,7 @@
 {
   "name": "@api/base",
   "version": "0.0.0",
-  "description": "This is base service",
+  "description": "Base Service",
   "author": {
     "name": "Felix Nguyen",
     "email": "im.felixng@gmail.com"

@@ -47,7 +47,5 @@ export const EnvConfiguration = (): Record<
     PORT: parseInt(getENV('PORT'), 10),
     VERSION: `v${getENV('VERSION')}`,
     SENTRY_DSN: getENV('SENTRY_DSN'),
-    AUTH0_ISSUER_URL: getENV('AUTH0_ISSUER_URL'),
-    AUTH0_AUDIENCE: getENV('AUTH0_AUDIENCE'),
   },
 });
