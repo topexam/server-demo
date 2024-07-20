@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: score-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: score-mongo
+  template:
+    metadata:
+      labels:
+        app: score-mongo
+    spec:
+      containers:
+        - name: score-mongo
+          image: mongo
+          volumeMounts:
+            - name: score-mongo-volume
+              mountPath: /data/db
+      volumes:
+        - name: score-mongo-volume
+          persistentVolumeClaim:
+            claimName: score-mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: score-mongo-svc
+spec:
+  selector:
+    app: score-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

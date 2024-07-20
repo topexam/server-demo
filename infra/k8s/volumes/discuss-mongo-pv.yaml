@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: discuss-mongo-pv
+  labels:
+    name: discuss-mongo-pv
+spec:
+  storageClassName: discuss-sc
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mgmt/data/discuss-mongo"

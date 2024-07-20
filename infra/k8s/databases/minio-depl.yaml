@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-depl
+spec:
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio
+          args:
+            - server
+            - /storage
+          env:
+            - name: MINIO_ACCESS_KEY
+              value: "minio_access_key"
+            - name: MINIO_SECRET_KEY
+              value: "minio_secret_key"
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: minio-data
+              mountPath: /storage
+      volumes:
+        - name: minio-data
+          persistentVolumeClaim:
+            claimName: minio-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-svc
+spec:
+  selector:
+    app: minio
+  ports:
+    - port: 9000
+      targetPort: 9000

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: examination-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: examination-mongo
+  template:
+    metadata:
+      labels:
+        app: examination-mongo
+    spec:
+      containers:
+        - name: examination-mongo
+          image: mongo
+          volumeMounts:
+            - name: examination-mongo-volume
+              mountPath: /data/db
+      volumes:
+        - name: examination-mongo-volume
+          persistentVolumeClaim:
+            claimName: examination-mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: examination-mongo-svc
+spec:
+  selector:
+    app: examination-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

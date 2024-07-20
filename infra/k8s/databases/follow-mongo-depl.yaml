@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: follow-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: follow-mongo
+  template:
+    metadata:
+      labels:
+        app: follow-mongo
+    spec:
+      containers:
+        - name: follow-mongo
+          image: mongo
+          volumeMounts:
+            - name: follow-mongo-volume
+              mountPath: /data/db
+      volumes:
+        - name: follow-mongo-volume
+          persistentVolumeClaim:
+            claimName: follow-mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: follow-mongo-svc
+spec:
+  selector:
+    app: follow-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discuss-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discuss-mongo
+  template:
+    metadata:
+      labels:
+        app: discuss-mongo
+    spec:
+      containers:
+        - name: discuss-mongo
+          image: mongo
+          volumeMounts:
+            - name: discuss-mongo-volume
+              mountPath: /data/db
+      volumes:
+        - name: discuss-mongo-volume
+          persistentVolumeClaim:
+            claimName: discuss-mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discuss-mongo-svc
+spec:
+  selector:
+    app: discuss-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

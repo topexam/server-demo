@@ -1,0 +1,76 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-svc
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  rules:
+    - host: api-local.topexam.net
+      http:
+        paths:
+          - path: /v1/svc.auth/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: auth-svc
+                port:
+                  number: 5000
+          - path: /v1/svc.user/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: user-svc
+                port:
+                  number: 5000
+          - path: /v1/svc.base/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: base-svc
+                port:
+                  number: 5000
+          - path: /v1/svc.examination/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: examination-svc
+                port:
+                  number: 5000
+          - path: /v1/svc.submission/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: submission-svc
+                port:
+                  number: 5000
+          - path: /v1/svc.review/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: review-svc
+                port:
+                  number: 5000
+          - path: /v1/svc.follow/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: follow-svc
+                port:
+                  number: 5000
+          - path: /v1/svc.discuss/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: discuss-svc
+                port:
+                  number: 5000
+
+          - path: /v1/svc.score/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: score-svc
+                port:
+                  number: 5000

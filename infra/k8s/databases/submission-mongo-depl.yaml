@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: submission-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: submission-mongo
+  template:
+    metadata:
+      labels:
+        app: submission-mongo
+    spec:
+      containers:
+        - name: submission-mongo
+          image: mongo
+          volumeMounts:
+            - name: submission-mongo-volume
+              mountPath: /data/db
+      volumes:
+        - name: submission-mongo-volume
+          persistentVolumeClaim:
+            claimName: submission-mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: submission-mongo-svc
+spec:
+  selector:
+    app: submission-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

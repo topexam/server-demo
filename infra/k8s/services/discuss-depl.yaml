@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discuss-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discuss
+  template:
+    metadata:
+      labels:
+        app: discuss
+    spec:
+      containers:
+        - name: discuss
+          image: docker.io/imfelixng/topexam.svc-discuss:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-streaming-svc:4222"
+            - name: NATS_CLUSTER_ID
+              value: "topthithu"
+            - name: PORT
+              value: "5000"
+            - name: SENTRY_DSN
+              value: "https://dd6aa68b43d64126b756f6edd32111de@o496273.ingest.sentry.io/5570389"
+            - name: MONGO_URI
+              value: "mongodb://discuss-mongo-svc"
+            - name: MONGO_DB_NAME
+              value: "discuss"
+            - name: AUTH0_ISSUER_URL
+              value: "https://topthithu.auth0.com/"
+            - name: AUTH0_AUDIENCE
+              value: "https://topthithu.dev"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discuss-svc
+spec:
+  selector:
+    app: discuss
+  ports:
+    - name: discuss
+      protocol: TCP
+      port: 5000
+      targetPort: 5000

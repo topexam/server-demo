@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: docker.io/imfelixng/topexam.svc-auth:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-streaming-svc:4222"
+            - name: NATS_CLUSTER_ID
+              value: "topthithu"
+            - name: BASIC_AUTH_TOKEN
+              value: "oxUJRWRaa7uYg2K2LJBdiU1h40ClUioppTThFaHEUvulUDgn7LBK22no8qC3NcvK"
+            - name: PORT
+              value: "5000"
+            - name: SENTRY_DSN
+              value: "https://dd6aa68b43d64126b756f6edd32111de@o496273.ingest.sentry.io/5570389"
+            - name: MONGO_URI
+              value: "mongodb://auth-mongo-svc"
+            - name: MONGO_DB_NAME
+              value: "auth"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-svc
+spec:
+  selector:
+    app: auth
+  ports:
+    - name: auth
+      protocol: TCP
+      port: 5000
+      targetPort: 5000

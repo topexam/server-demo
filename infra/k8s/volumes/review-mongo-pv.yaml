@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: review-mongo-pv
+  labels:
+    name: review-mongo-pv
+spec:
+  storageClassName: review-sc
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mgmt/data/review-mongo"

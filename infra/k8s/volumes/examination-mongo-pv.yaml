@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: examination-mongo-pv
+  labels:
+    name: examination-mongo-pv
+spec:
+  storageClassName: examination-sc
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mgmt/data/examination-mongo"

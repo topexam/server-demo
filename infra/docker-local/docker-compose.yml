@@ -1,0 +1,100 @@
+version: "3"
+
+services:
+  mongo_srv:
+    image: mongo
+    container_name: mongo_srv
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+  minio_srv:
+    image: minio/minio
+    container_name: minio_srv
+    ports:
+      - 9000:9000
+      - 9099:9099
+    environment:
+      - MINIO_ACCESS_KEY=minio_access_key
+      - MINIO_SECRET_KEY=minio_secret_key
+      - MINIO_SERVER_URL=https://s3-local.topexam.net
+      - MINIO_BROWSER_REDIRECT_URL=https://s3-local.topexam.net
+    volumes:
+      - minio_data:/data
+    command: server --address ":9099" --console-address ":9000" /data
+
+  eventstore_srv:
+    image: eventstore/eventstore:21.10.9-alpha-arm64v8
+    container_name: eventstore_srv
+    environment:
+      - EVENTSTORE_CLUSTER_SIZE=1
+      - EVENTSTORE_RUN_PROJECTIONS=All
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+      - EVENTSTORE_EXT_TCP_PORT=1113
+      - EVENTSTORE_HTTP_PORT=2113
+      - EVENTSTORE_INSECURE=true
+      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
+      - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+    ports:
+      - "1113:1113"
+      - "2113:2113"
+    volumes:
+      - type: volume
+        source: eventstore_data
+        target: /c/data/eventstore/data
+      - type: volume
+        source: eventstore_logs
+        target: /c/data/eventstore/logs
+
+  redis_srv:
+    image: redis
+    container_name: redis_srv
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/data
+
+  zookeeper_dev:
+    platform: linux/amd64
+    container_name: zookeeper_dev
+    image: confluentinc/cp-zookeeper:7.0.1
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_log:/var/lib/zookeeper/log
+
+  kafka_dev:
+    platform: linux/amd64
+    container_name: kafka_dev
+    image: confluentinc/cp-kafka:7.0.1
+    depends_on:
+      - zookeeper_dev
+    ports:
+      - "29092:29092"
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper_dev:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_dev:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+
+volumes:
+  mongo_data:
+  minio_data:
+  eventstore_data:
+  eventstore_logs:
+  redis_data:
+  kafka_data:
+  zookeeper_data:
+  zookeeper_log:

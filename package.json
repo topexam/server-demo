@@ -1,0 +1,36 @@
+{
+  "name": "@topexam/api",
+  "version": "0.0.0",
+  "author": {
+    "name": "Felix Nguyen",
+    "email": "im.felixng@gmail.com"
+  },
+  "private": true,
+  "scripts": {
+    "link": "lerna link",
+    "bootstrap": "lerna bootstrap",
+    "dev": "lerna run start:dev",
+    "build": "lerna exec yarn build",
+    "start": "lerna exec yarn start",
+    "start:build": "yarn build && lerna exec yarn start:prod",
+    "start:prod": "lerna exec yarn start:prod",
+    "lint": "lerna exec yarn lint",
+    "lint:fix": "lerna exec yarn lint:fix",
+    "test": "lerna exec yarn test",
+    "sync:dev": "lerna exec --no-bail make sync-dev",
+    "sync:beta": "lerna exec --no-bail make sync-beta",
+    "sync:prod": "lerna exec --no-bail make sync-prod",
+    "deploy:install": "lerna exec --no-bail --concurrency 1 NODE_ENV=production yarn install",
+    "deploy:build": "lerna exec --no-bail yarn build"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.3.0",
+    "lerna": "^6.1.0"
+  },
+  "dependencies": {
+    "@topthithu/api-common": "^0.0.96",
+    "@topthithu/api-common-proto": "^0.0.11",
+    "@topthithu/api.service.proto": "^0.0.36"
+  }
+}

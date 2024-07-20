@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expiration-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expiration
+  template:
+    metadata:
+      labels:
+        app: expiration
+    spec:
+      containers:
+        - name: expiration
+          image: docker.io/imfelixng/topexam.svc-expiration:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-streaming-svc:4222"
+            - name: NATS_CLUSTER_ID
+              value: "topthithu"
+            - name: PORT
+              value: "5000"
+            - name: SENTRY_DSN
+              value: "https://dd6aa68b43d64126b756f6edd32111de@o496273.ingest.sentry.io/5570389"
+            - name: REDIS_HOST
+              value: "expiration-redis-svc"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: expiration-svc
+spec:
+  selector:
+    app: expiration
+  ports:
+    - name: expiration
+      protocol: TCP
+      port: 5000
+      targetPort: 5000

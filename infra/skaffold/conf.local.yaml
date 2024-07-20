@@ -1,0 +1,91 @@
+apiVersion: skaffold/v2beta12
+kind: Config
+build:
+  artifacts:
+    - image: docker.io/imfelixng/topexam.svc-auth
+      context: services/auth
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: docker.io/imfelixng/topexam.svc-user
+      context: services/user
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: docker.io/imfelixng/topexam.svc-base
+      context: services/base
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: docker.io/imfelixng/topexam.svc-examination
+      context: services/examination
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: docker.io/imfelixng/topexam.svc-submission
+      context: services/submission
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: docker.io/imfelixng/topexam.svc-expiration
+      context: services/expiration
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: docker.io/imfelixng/topexam.svc-review
+      context: services/review
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: docker.io/imfelixng/topexam.svc-follow
+      context: services/follow
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: docker.io/imfelixng/topexam.svc-discuss
+      context: services/discuss
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+    - image: docker.io/imfelixng/topexam.svc-score
+      context: services/score
+      sync:
+        manual:
+          - src: src/**/*.ts
+            dest: .
+      docker:
+        dockerfile: Dockerfile.dev
+  local:
+    push: false
+deploy:
+  kubectl:
+    manifests:
+      - infra/k8s/*
+      - infra/k8s-dev/*

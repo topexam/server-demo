@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: follow-mongo-pv
+  labels:
+    name: follow-mongo-pv
+spec:
+  storageClassName: follow-sc
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mgmt/data/follow-mongo"

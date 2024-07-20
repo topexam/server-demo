@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: base-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: base
+  template:
+    metadata:
+      labels:
+        app: base
+    spec:
+      containers:
+        - name: base
+          image: docker.io/imfelixng/topexam.svc-base:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-streaming-svc:4222"
+            - name: NATS_CLUSTER_ID
+              value: "topthithu"
+            - name: PORT
+              value: "5000"
+            - name: SENTRY_DSN
+              value: "https://dd6aa68b43d64126b756f6edd32111de@o496273.ingest.sentry.io/5570389"
+            - name: MONGO_URI
+              value: "mongodb://base-mongo-svc"
+            - name: MONGO_DB_NAME
+              value: "base"
+            - name: AUTH0_ISSUER_URL
+              value: "https://topthithu.auth0.com/"
+            - name: AUTH0_AUDIENCE
+              value: "https://topthithu.dev"
+            - name: MINIO_HOST
+              value: "minio-svc"
+            - name: MINIO_PORT
+              value: "9000"
+            - name: MINIO_BUCKET
+              value: "file-storage"
+            - name: MINIO_ACCESS_KEY
+              value: "minio_access_key"
+            - name: MINIO_SECRET_KEY
+              value: "minio_secret_key"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: base-svc
+spec:
+  selector:
+    app: base
+  ports:
+    - name: base
+      protocol: TCP
+      port: 5000
+      targetPort: 5000

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+        - name: user
+          image: docker.io/imfelixng/topexam.svc-user:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-streaming-svc:4222"
+            - name: NATS_CLUSTER_ID
+              value: "topthithu"
+            - name: PORT
+              value: "5000"
+            - name: SENTRY_DSN
+              value: "https://dd6aa68b43d64126b756f6edd32111de@o496273.ingest.sentry.io/5570389"
+            - name: MONGO_URI
+              value: "mongodb://user-mongo-svc"
+            - name: MONGO_DB_NAME
+              value: "user"
+            - name: AUTH0_ISSUER_URL
+              value: "https://topthithu.auth0.com/"
+            - name: AUTH0_AUDIENCE
+              value: "https://topthithu.dev"
+            - name: AUTH0_AUDIENCE_API
+              value: "https://topthithu.auth0.com/api/v2/"
+            - name: AUTH0_CLIENT_ID
+              value: "z1IV7Adi0fS1I2kDt64yBOqrA8U0bvaV"
+            - name: AUTH0_CLIENT_SECRET_KEY
+              value: "qGCIDECphmQJfokfC9ABjtKbYsbKr9ixIxcGSOx7Zyqj3h3ZCY_pvKmuq1wriNWd"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-svc
+spec:
+  selector:
+    app: user
+  ports:
+    - name: user
+      protocol: TCP
+      port: 5000
+      targetPort: 5000

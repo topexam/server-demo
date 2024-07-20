@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: base-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: base-mongo
+  template:
+    metadata:
+      labels:
+        app: base-mongo
+    spec:
+      containers:
+        - name: base-mongo
+          image: mongo
+          volumeMounts:
+            - name: base-mongo-volume
+              mountPath: /data/db
+      volumes:
+        - name: base-mongo-volume
+          persistentVolumeClaim:
+            claimName: base-mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: base-mongo-svc
+spec:
+  selector:
+    app: base-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
