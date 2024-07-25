@@ -2,7 +2,7 @@
 
 A lightweight TopExam Server for purpose demonstration.
 
-## Technology and Tools
+## Tools & Technologies
 
 We use some tools that fit with system requirements such as
 
